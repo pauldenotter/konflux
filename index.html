@@ -3,8 +3,34 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>kxFiddle</title>
+		<link rel="stylesheet" href="style/fiddle.css" />
 	</head>
 	<body>
-		<h1>kxFiddle</h1>
+		<header>
+			<h1>kxFiddle</h1>
+			<nav>
+				<button data-action="kx.fiddle.run">Run</button>
+			</nav>
+		</header>
+		<div class="row">
+			<div class="col left" data-type="HTML">
+				<textarea name="html">
+<div id="result"></div>
+				</textarea>
+			</div>
+			<div class="col right" data-type="CSS">
+				<textarea name="style"></textarea>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col left" data-type="JavaScript">
+				<textarea name="script"></textarea>
+			</div>
+			<div class="col right">
+				<iframe id="sandbox"></iframe>
+			</div>
+		</div>
+		<script src="script/konflux.js"></script>
+		<script src="script/fiddle.js"></script>
 	</body>
 </html>

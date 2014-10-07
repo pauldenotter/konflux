@@ -1,4 +1,6 @@
 ;(function(window, kx) {
+	'use strict';
+
 	function kxFiddle()
 	{
 		var fiddle = this,
@@ -89,7 +91,6 @@
 			action = args.action.split('.'),
 			part, method;
 
-		delete args.action;
 		args = kx.iterator(args);
 
 		while (part = action.shift())

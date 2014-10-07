@@ -141,5 +141,10 @@
 		}
 
 		method.call({}, args);
+	}).add(window, ['keydown'], function(e) {
+		if (e.keyCode === 13 && (e.metaKey || e.ctrlKey))
+		{
+			kx.fiddle.run.call();
+		}
 	});
 })(window, konflux);

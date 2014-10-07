@@ -28,6 +28,9 @@
 			var code = getValue(type),
 				el = sandbox.createElement(type);
 
+			if (type === 'script')
+				kx.fiddleHinter.hint(code);
+
 			el.type = _instructions[type].mime;
 			el.dataset.kxFiddleChild = 'true';
 			try
@@ -65,13 +68,23 @@
 
 		function getValue(type)
 		{
-			return kx.dom.select('textarea[name=' + type + ']')
+			var result = '';
+
+			if (type === 'script')
+				result += ';(function() {\n';
+
+			result += kx.dom.select('textarea[name=' + type + ']')
 				.map(function(el) {
 					return el.value.trim();
 				})
 				.collection()
 				.join('\n')
 			;
+
+			if (type === 'script')
+				result += '\n})();\n';
+
+			return result;
 		}
 
 		fiddle.run = function(args) {

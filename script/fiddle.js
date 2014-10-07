@@ -4,6 +4,7 @@
 	function kxFiddle()
 	{
 		var fiddle = this,
+			_console = document.getElementById('console'),
 			_instructions = {
 				script: {
 					mime: 'text/javascript',
@@ -40,12 +41,25 @@
 			sandbox[_instructions[type].el].appendChild(el);
 		}
 
-		function initKx(sandbox, callback)
+		function initDependencies(sandbox, callback)
 		{
-			var el = sandbox.createElement('script');
+			var el = sandbox.doc.createElement('script');
 			el.dataset.kxFiddleChild = 'true';
-			sandbox.body.appendChild(el);
-			if ('function' === typeof callback) el.onload = callback;
+			sandbox.doc.body.appendChild(el);
+			el.onload = function() {
+				var el = sandbox.doc.createElement('script');
+				el.dataset.kxFiddleChild = 'true';
+				sandbox.doc.body.appendChild(el);
+				el.onload = function() {
+					new sandbox.win.kx.fiddleConsole(
+						sandbox.win.console,
+						_console
+					);
+
+					if ('function' === typeof callback) callback.call();
+				};
+				el.src = 'script/console.js';
+			};
 			el.src = 'script/konflux.js';
 		}
 
@@ -61,23 +75,32 @@
 		}
 
 		fiddle.run = function(args) {
-			var sandbox = document.getElementById('sandbox').contentDocument;
+			var el = document.getElementById('sandbox'),
+				sandbox = {
+					win: el.contentWindow,
+					doc: el.contentDocument
+				},
+				htmlEl;
+
+			// clear console
+			while (_console.firstChild)
+				_console.removeChild(_console.firstChild);
 
 			console.log('Running fiddle');
-			clearSandbox(sandbox);
+			clearSandbox(sandbox.doc);
 
 			// add CSS
-			inject(sandbox, 'style');
+			inject(sandbox.doc, 'style');
 
 			// add HTML
-			htmlEl = sandbox.createElement('div');
+			htmlEl = sandbox.doc.createElement('div');
 			htmlEl.dataset.kxFiddleChild = 'true';
 			htmlEl.innerHTML = getValue('html')
-			sandbox.body.appendChild(htmlEl);
+			sandbox.doc.body.appendChild(htmlEl);
 
 			// add JavaScript
-			initKx(sandbox, function() {
-				inject(sandbox, 'script');
+			initDependencies(sandbox, function() {
+				inject(sandbox.doc, 'script');
 			});
 		};
 	}

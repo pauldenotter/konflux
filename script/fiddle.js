@@ -28,9 +28,6 @@
 			var code = getValue(type),
 				el = sandbox.createElement(type);
 
-			if (type === 'script')
-				kx.fiddleHinter.hint(code);
-
 			el.type = _instructions[type].mime;
 			el.dataset.kxFiddleChild = 'true';
 			try
@@ -63,7 +60,7 @@
 				};
 				el.src = 'script/console.js';
 			};
-			el.src = 'script/konflux.js';
+			el.src = 'vendor/konfirm/konflux/konflux.js';
 		}
 
 		function getValue(type)

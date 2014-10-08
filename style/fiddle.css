@@ -38,3 +38,26 @@ body
 	right: 5px;
 	z-index: 10;
 }
+
+ul#console
+{
+	list-style: none;
+	padding: 0;
+}
+
+ul#console li.error
+{
+	color: #ff0000;
+}
+
+ul#console li.warn
+{
+	color: #db931d;
+}
+
+ul#console li.debug,
+ul#console li.log,
+ul#console li.info
+{
+	color: #0000ff;
+}

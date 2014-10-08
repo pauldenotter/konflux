@@ -49,19 +49,7 @@
 		{
 			var el = sandbox.contentDocument.createElement('script');
 			sandbox.contentDocument.body.appendChild(el);
-			el.onload = function() {
-				var el = sandbox.contentDocument.createElement('script');
-				sandbox.contentDocument.body.appendChild(el);
-				el.onload = function() {
-					new sandbox.contentWindow.kx.fiddleConsole(
-						sandbox.contentWindow.console,
-						_console
-					);
-
-					if ('function' === typeof callback) callback.call();
-				};
-				el.src = 'script/console.js';
-			};
+			if ('function' === typeof callback) callback.call();
 			el.src = 'vendor/konfirm/konflux/konflux.js';
 		}
 
@@ -87,6 +75,8 @@
 				_console.removeChild(_console.firstChild);
 
 			container.appendChild(el);
+
+			kx.console.bind(el, _console);
 
 			// add CSS
 			inject(el.contentDocument, 'css');

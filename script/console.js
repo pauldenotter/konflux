@@ -1,49 +1,70 @@
 ;(function(window, kx) {
 	'use strict';
 
-	function Console(browserConsole, fiddleConsole)
+	function Console()
 	{
-		var _console = this,
-			config = {},
-			doc = fiddleConsole.ownerDocument;
+		var _console = this;
 
-		function getReplacement(method)
+		function getReplacement(type, outputEl, originalFunction)
 		{
 			return function() {
-				var msg = doc.createElement('li'),
-					msgString = Array.prototype.slice.call(arguments).map(function(arg) {
-						switch (typeof arg)
-						{
-							case 'object':
-								return JSON.stringify(arg);
+				if ('function' === typeof originalFunction)
+					originalFunction.apply(this, arguments);
 
-							case 'undefined':
-								return 'undefined';
-
-							default:
-								return arg;
-						}
-					}).join(' ');
-
-				if ('function' === typeof config[method])
-					config[method].apply(this, arguments);
-
-				msg.appendChild(doc.createTextNode(msgString));
-				msg.setAttribute('class', method);
-				fiddleConsole.appendChild(msg);
+				logMessage(type, arguments, outputEl);
 			};
 		}
 
-		(function init() {
-			if (browserConsole.isOverridden === true) return;
-			browserConsole.isOverridden = true;
+		function logMessage(type, args, outputEl)
+		{
+			var msgEl = document.createElement('li'),
+				msgPre = document.createElement('pre'),
+				msgTxt = document.createTextNode(kx.iterator(Array.prototype.slice.call(args)).map(function(arg) {
+					switch(typeof arg)
+					{
+						case 'object':
+							if (arg instanceof Error || arg.constructor.name === 'Error')
+								return formatError(arg);
 
-			kx.iterator(['error', 'warn', 'debug', 'log', 'info']).each(function(method) {
-				config[method] = browserConsole[method] || false;
-				browserConsole[method] = getReplacement(method);
-			});
-		})();
+							return JSON.stringify(arg);
+
+						case 'null':
+							return 'null';
+
+						default:
+							return arg;
+					}
+				}).collection().join(' '));
+
+			msgPre.appendChild(msgTxt);
+			msgEl.setAttribute('class', type);
+			msgEl.appendChild(msgPre);
+			outputEl.appendChild(msgEl);
+		}
+
+		function formatError(error)
+		{
+			if (error.stack)
+				return error.stack.replace(/\n\s+at inject.*?\/script\/fiddle\.js[\s\S]+/im, '');
+
+			return error.toString();
+		}
+
+		_console.bind = function(sandbox, outputEl) {
+			var _window = sandbox.contentWindow;
+
+			_window.onerror = function(message, filename, lineno, colno, error) {
+				_window.console.error(error || new Error(message, filename, lineno));
+			};
+
+ 			kx.iterator(['error', 'warn', 'debug', 'log', 'info']).each(function(type) {
+	 			var originalFunction = _window.console && _window.console[type] ?
+	 				_window.console[type] : false
+	 			;
+				_window.console[type] = getReplacement(type, outputEl, originalFunction);
+ 			});
+		};
 	}
 
-	kx.fiddleConsole = Console;
+	kx.console = new Console();
 })(window, konflux);

@@ -26,7 +26,7 @@
 							if (arg instanceof Error || arg.constructor.name === 'Error')
 								return formatError(arg);
 
-							return JSON.stringify(arg);
+							return JSON.stringify(arg, null, '\t');
 
 						case 'null':
 							return 'null';
@@ -38,6 +38,7 @@
 
 			msgPre.appendChild(msgTxt);
 			msgEl.setAttribute('class', type);
+			msgEl.setAttribute('data-date', (new Date).toString().replace(/([0-2][0-9]\:[0-5][0-9]\:[0-5][0-9]).*/, '$1'));
 			msgEl.appendChild(msgPre);
 			outputEl.appendChild(msgEl);
 		}

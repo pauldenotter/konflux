@@ -91,8 +91,6 @@
 		};
 
 		(function init() {
-			ace.require("ace/ext/language_tools");
-
 			kx.iterator(['html', 'css', 'javascript']).each(function(mode) {
 				var editor = ace.edit('ace-' + mode);
 				editor.setTheme('ace/theme/monokai');

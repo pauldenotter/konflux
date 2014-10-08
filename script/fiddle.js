@@ -4,15 +4,18 @@
 	function kxFiddle()
 	{
 		var fiddle = this,
+			editors = {},
 			_console = document.getElementById('console'),
 			_instructions = {
-				script: {
+				javascript: {
 					mime: 'text/javascript',
-					el: 'body'
+					parent: 'body',
+					tag: 'script'
 				},
-				style: {
+				css: {
 					mime: 'text/css',
-					el: 'head'
+					parent: 'head',
+					tag: 'style'
 				}
 			};
 
@@ -26,10 +29,10 @@
 		function inject(sandbox, type)
 		{
 			var code = getValue(type),
-				el = sandbox.createElement(type);
+				el = sandbox.createElement(_instructions[type].tag);
 
 			el.type = _instructions[type].mime;
-			el.dataset.kxFiddleChild = 'true';
+
 			try
 			{
 				el.appendChild(sandbox.createTextNode(code));
@@ -38,21 +41,20 @@
 			{
 				el.text = code;
 			}
-			sandbox[_instructions[type].el].appendChild(el);
+
+			sandbox[_instructions[type].parent].appendChild(el);
 		}
 
 		function initDependencies(sandbox, callback)
 		{
-			var el = sandbox.doc.createElement('script');
-			el.dataset.kxFiddleChild = 'true';
-			sandbox.doc.body.appendChild(el);
+			var el = sandbox.contentDocument.createElement('script');
+			sandbox.contentDocument.body.appendChild(el);
 			el.onload = function() {
-				var el = sandbox.doc.createElement('script');
-				el.dataset.kxFiddleChild = 'true';
-				sandbox.doc.body.appendChild(el);
+				var el = sandbox.contentDocument.createElement('script');
+				sandbox.contentDocument.body.appendChild(el);
 				el.onload = function() {
-					new sandbox.win.kx.fiddleConsole(
-						sandbox.win.console,
+					new sandbox.contentWindow.kx.fiddleConsole(
+						sandbox.contentWindow.console,
 						_console
 					);
 
@@ -63,56 +65,54 @@
 			el.src = 'vendor/konfirm/konflux/konflux.js';
 		}
 
-		function getValue(type)
+		function getValue(mode)
 		{
-			var result = '';
-
-			if (type === 'script')
-				result += ';(function() {\n';
-
-			result += kx.dom.select('textarea[name=' + type + ']')
-				.map(function(el) {
-					return el.value.trim();
-				})
-				.collection()
-				.join('\n')
-			;
-
-			if (type === 'script')
-				result += '\n})();\n';
-
-			return result;
+			return editors[mode].getValue();
 		}
 
 		fiddle.run = function(args) {
-			var el = document.getElementById('sandbox'),
+			var container = document.getElementById('sandbox'),
+				el = document.createElement('iframe'),
 				sandbox = {
 					win: el.contentWindow,
 					doc: el.contentDocument
-				},
-				htmlEl;
+				};
+
+			// renew sandbox frame
+			while (container.firstChild)
+				container.removeChild(container.firstChild);
 
 			// clear console
 			while (_console.firstChild)
 				_console.removeChild(_console.firstChild);
 
-			console.log('Running fiddle');
-			clearSandbox(sandbox.doc);
+			container.appendChild(el);
 
 			// add CSS
-			inject(sandbox.doc, 'style');
+			inject(el.contentDocument, 'css');
 
 			// add HTML
-			htmlEl = sandbox.doc.createElement('div');
-			htmlEl.dataset.kxFiddleChild = 'true';
-			htmlEl.innerHTML = getValue('html')
-			sandbox.doc.body.appendChild(htmlEl);
+			el.contentDocument.body.innerHTML = getValue('html');
 
 			// add JavaScript
-			initDependencies(sandbox, function() {
-				inject(sandbox.doc, 'script');
+			initDependencies(el, function() {
+				inject(el.contentDocument, 'javascript');
 			});
 		};
+
+		(function init() {
+			ace.require("ace/ext/language_tools");
+
+			kx.iterator(['html', 'css', 'javascript']).each(function(mode) {
+				var editor = ace.edit('ace-' + mode);
+				editor.setTheme('ace/theme/monokai');
+				editor.getSession().setMode('ace/mode/' + mode);
+				editor.setOptions({
+					enableBasicAutocompletion: true
+				});
+				editors[mode] = editor;
+			});
+		})();
 	}
 
 	kx.fiddle = new kxFiddle();

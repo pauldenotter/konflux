@@ -9,31 +9,28 @@
 		<header>
 			<h1>kxFiddle</h1>
 		</header>
+
 		<div class="row">
-			<div class="col left" data-type="HTML">
-				<textarea name="html"><div id="result"></div></textarea>
+			<div class="dp50">
+				<div id="ace-html" data-type="HTML"></div>
+				<hr />
+				<div id="ace-javascript" data-type="JavaScript"></div>
 			</div>
-			<div class="col right" data-type="CSS">
-				<textarea name="style"></textarea>
+			<div class="dp50">
+				<div id="ace-css" data-type="CSS"></div>
+				<hr />
+				<div id="sandbox"></div>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col left" data-type="JavaScript">
-				<textarea name="script">console.log('Started console');</textarea>
-			</div>
-			<div class="col right">
-				<iframe id="sandbox"></iframe>
-			</div>
+			<span class="controls">
+				<button data-action="kx.fiddle.run">Run</button>
+			</span>
 		</div>
-		<button data-action="kx.fiddle.run">Run</button>
 		<div class="row">
-			<div class="col left">
-				<ul id="console"></ul>
-			</div>
-			<div class="col right">
-				<ul id="hinter"></ul>
-			</div>
+			<ul id="console"></ul>
 		</div>
+
 		<script src="vendor/konfirm/konflux/konflux.js"></script>
 		<script src="vendor/ajaxorg/ace/ace.js"></script>
 		<script src="script/fiddle.js"></script>

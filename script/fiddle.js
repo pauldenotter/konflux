@@ -19,13 +19,6 @@
 				}
 			};
 
-		function clearSandbox(sandbox)
-		{
-			kx.iterator(sandbox.querySelectorAll('[data-kx-fiddle-child]')).each(function(el) {
-				el.parentElement.removeChild(el);
-			});
-		}
-
 		function inject(sandbox, type)
 		{
 			var code = getValue(type),
@@ -49,7 +42,7 @@
 		{
 			var el = sandbox.contentDocument.createElement('script');
 			sandbox.contentDocument.body.appendChild(el);
-			if ('function' === typeof callback) callback.call();
+			if ('function' === typeof callback) el.onload = callback;
 			el.src = 'vendor/konfirm/konflux/konflux.js';
 		}
 

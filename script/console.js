@@ -26,7 +26,14 @@
 							if (arg instanceof Error || arg.constructor.name === 'Error')
 								return formatError(arg);
 
-							return JSON.stringify(arg, null, '\t');
+							try
+							{
+								return JSON.stringify(arg, null, '\t');
+							}
+							catch (e)
+							{
+								return arg.toString ? arg.toString() : 'Complex object: ' + arg.constructor.name;
+							}
 
 						case 'null':
 							return 'null';
@@ -67,5 +74,5 @@
 		};
 	}
 
-	kx.console = new Console();
+	kx.fiddle.console = new Console();
 })(window, konflux);

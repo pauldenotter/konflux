@@ -51,6 +51,33 @@
 			return editors[mode].getValue();
 		}
 
+		fiddle.display = function(data) {
+			var type;
+
+			if (!data) return;
+
+			for (type in data)
+				editors[type].setValue(data[type], 1);
+		};
+
+		fiddle.load = function(args) {
+			fiddle.display(fiddle.storage.load(args));
+		};
+
+		fiddle.save = function(args) {
+			var name = args.name || prompt('Save as'),
+				data = {};
+
+			kx.iterator(editors).each(function(editor, key) {
+				data[key] = editor.getValue();
+			});
+
+			fiddle.storage.save({
+				name: name,
+				data: data
+			});
+		}
+
 		fiddle.run = function(args) {
 			var container = document.getElementById('sandbox'),
 				el = document.createElement('iframe'),
@@ -69,7 +96,7 @@
 
 			container.appendChild(el);
 
-			kx.console.bind(el, _console);
+			kx.fiddle.console.bind(el, _console);
 
 			// add CSS
 			inject(el.contentDocument, 'css');

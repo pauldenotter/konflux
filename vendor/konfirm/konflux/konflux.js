@@ -214,7 +214,7 @@
 	function isType(t, variable)
 	{
 		var full = type(variable),
-			check = full.substr(0, t.length);
+			check = t && t.length ? full.substr(0, t.length) : null;
 
 		if (check !== t)
 			switch (full)
@@ -584,26 +584,28 @@
 		function implement(name, evaluate, one)
 		{
 			return function(callback, context){
-				var list, result, i;
+				var list, result, keys, i;
 
 				//  always use the native implementation, if it exists
 				if (name in collection && isType('function', collection[name]))
 					return new kxIterator(collection[name].apply(collection, arguments));
 
-				list = new kxIterator();
-				for (i = 0; i < collection.length; ++i)
+				list = collection instanceof Array ? [] : {};
+
+				keys = iterator.keys();
+				for (i = 0; i < keys.length; ++i)
 				{
-					result = evaluate(callback.apply(context || undefined, [collection[i], i, collection]), collection[i]);
+					result = evaluate(callback.apply(context || undefined, [collection[keys[i]], keys[i], collection]), collection[keys[i]]);
 
 					if (result)
 					{
 						if (one)
 							return result;
-						list.add(result);
+						list[keys[i]] = result;
 					}
 				}
 
-				return list;
+				return konflux.iterator(list);
 			};
 		}
 
@@ -974,7 +976,7 @@
 		{
 			if (isType(undef, ieVersion))
 				ieVersion = detectIE();
-			return min ? ieVersion < min : ieVersion;
+			return min && ieVersion ? ieVersion < min : ieVersion;
 		};
 
 		/**
@@ -2696,7 +2698,10 @@
 			{
 				case 'object':
 					if (!('length' in mixed))
+					{
+						result = [mixed];
 						break;
+					}
 
 					try
 					{
@@ -2707,6 +2712,11 @@
 						for (result = [], len = mixed.length, i = 0; i < len; ++i)
 							result.push(mixed[i]);
 					}
+					break;
+
+				case 'null':
+				case 'undefined':
+					result = [];
 					break;
 
 				default:
@@ -2858,43 +2868,40 @@
 
 			switch (type(struct))
 			{
+				case 'array':
+					element = [];
+					for (i = 0; i < struct.length; ++i)
+						element.push(createStructure(struct[i]));
+					break;
+
 				case 'object':
-					if (struct instanceof Array)
-					{
-						element = [];
-						for (i = 0; i < struct.length; ++i)
-							element.push(createStructure(struct[i]));
-					}
+					nodeName = 'name' in struct ? struct.name : 'div';
+					if (!/^[a-z]+$/.test(nodeName))
+						element = document.querySelector(nodeName);
 					else
+						element = document.createElement(nodeName);
+
+					for (p in struct)
 					{
-						nodeName = 'name' in struct ? struct.name : 'div';
-						if (!/^[a-z]+$/.test(nodeName))
-							element = document.querySelector(nodeName);
-						else
-							element = document.createElement(nodeName);
-
-						for (p in struct)
+						switch (p)
 						{
-							switch (p)
-							{
-								case 'name':
-									//  do nothing
-									break;
+							case 'name':
+								//  do nothing
+								break;
 
-								case 'child':
-								case 'content':
-									appendTo(element, createStructure(struct[p]));
-									break;
+							case 'child':
+							case 'content':
+								appendTo(element, createStructure(struct[p]));
+								break;
 
-								case 'class':
-								case 'className':
-									element.setAttribute('class', struct[p]);
-									break;
+							case 'class':
+							case 'className':
+								element.setAttribute('class', struct[p]);
+								break;
 
-								default:
-									element.setAttribute(p, struct[p]);
-									break;
-							}
+							default:
+								element.setAttribute(p, struct[p]);
+								break;
 						}
 					}
 					break;

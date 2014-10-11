@@ -1,0 +1,19 @@
+{
+  "name": "konflux-pages",
+  "version": "0.1.0",
+  "description": "Examples and Fiddle app for konfirm/konflux",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/konfirm/konflux.git"
+  },
+  "author": "Paul den Otter <pauldenotter@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/konfirm/konflux/issues"
+  },
+  "homepage": "https://github.com/konfirm/konflux",
+  "devDependencies": {
+    "gulp-csslint": "^0.1.5",
+    "gulp-jshint": "^1.8.5"
+  }
+}

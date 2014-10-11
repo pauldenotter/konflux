@@ -26,14 +26,14 @@
 
 			if (components.length === 2 && 'function' === typeof adapters[components[0]])
 			{
-				if (val = adapters[components[0]].apply(null, components.slice(1)))
+				if ((val = adapters[components[0]].apply(null, components.slice(1))))
 					return decode(val);
 			}
 			else
 			{
 				for (a in adapters._ordered)
 				{
-					if (val = adapters._ordered[a].apply(null, components))
+					if ((val = adapters._ordered[a].apply(null, components)))
 						return decode(val);
 				}
 			}
@@ -48,7 +48,7 @@
 		adapters.example = function(name)
 		{
 			return false;
-		}
+		};
 
 		adapters.querystring = function(data)
 		{
@@ -62,7 +62,7 @@
 			if (querystring !== '') return decode(querystring);
 
 			return false;
-		}
+		};
 
 		adapters.user = function(name, data)
 		{
@@ -70,7 +70,7 @@
 				return kx.storage.set(name, encode(data));
 
 			return kx.storage.get(name);
-		}
+		};
 
 		adapters._ordered = [
 			adapters.user,

@@ -34,6 +34,7 @@
 							{
 								return arg.toString ? arg.toString() : 'Complex object: ' + arg.constructor.name;
 							}
+							break;
 
 						case 'null':
 							return 'null';
@@ -45,7 +46,7 @@
 
 			msgPre.appendChild(msgTxt);
 			msgEl.setAttribute('class', type);
-			msgEl.setAttribute('data-date', (new Date).toString().replace(/([0-2][0-9]\:[0-5][0-9]\:[0-5][0-9]).*/, '$1'));
+			msgEl.setAttribute('data-date', (new Date()).toString().replace(/([0-2][0-9]\:[0-5][0-9]\:[0-5][0-9]).*/, '$1'));
 			msgEl.appendChild(msgPre);
 			outputEl.appendChild(msgEl);
 		}

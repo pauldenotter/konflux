@@ -1,7 +1,7 @@
 ;(function(window, kx) {
 	'use strict';
 
-	function kxFiddle()
+	function Fiddle()
 	{
 		var fiddle = this,
 			editors = {},
@@ -76,7 +76,15 @@
 				name: name,
 				data: data
 			});
-		}
+		};
+
+		fiddle.clear = function(args) {
+			fiddle.display({
+				html: '',
+				css: '',
+				javascript: ''
+			});
+		};
 
 		fiddle.run = function(args) {
 			var container = document.getElementById('sandbox'),
@@ -123,7 +131,7 @@
 		})();
 	}
 
-	kx.fiddle = new kxFiddle();
+	kx.fiddle = new Fiddle();
 
 	// bind eventhandlers
 	kx.event.add(document.body, ['touchstart', 'click'], '[data-action]', function(e) {
@@ -134,7 +142,7 @@
 
 		args = kx.iterator(args);
 
-		while (part = action.shift())
+		while ((part = action.shift()))
 		{
 			if (!method)
 			{

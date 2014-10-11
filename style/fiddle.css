@@ -5,26 +5,26 @@ body
 
 .dp50
 {
-	width:50%;
-	float:left;
+	width: 50%;
+	float: left;
 	display: inline;
-	*margin-right:-1px;
+	*margin-right: -1px;
 }
 
 .ace_editor,
-#sandbox
+.sandbox
 {
 	height: 160px;
 }
 
-#sandbox > iframe
+.sandbox > iframe
 {
 	width: 100%;
 	height: 100%;
 	border: none;
 }
 
-[data-type]:before
+div[data-type]:before
 {
 	position: absolute;
 	content: attr(data-type);
@@ -39,7 +39,7 @@ body
 	z-index: 10;
 }
 
-ul#console
+.console
 {
 	list-style: none;
 	max-width: 100%;
@@ -47,19 +47,19 @@ ul#console
 	padding: 0;
 }
 
-ul#console li
+.console li
 {
 	position: relative;
 	transition: .3s all;
 	border-bottom: 1px solid #ccc;
 }
 
-ul#console li:hover
+.console li:hover
 {
 	padding-left: 200px;
 }
 
-ul#console li:before
+.console li:before
 {
 	position: absolute;
 	content: attr(data-date);
@@ -69,12 +69,12 @@ ul#console li:before
 	font-family: monospace;
 }
 
-ul#console li:hover:before
+.console li:hover:before
 {
 	left: 0;
 }
 
-ul#console li pre
+.console li pre
 {
 	-moz-tab-size: 4;
 	-o-tab-size: 4;
@@ -82,19 +82,19 @@ ul#console li pre
 	margin: 2px 0;
 }
 
-ul#console li.error
+.console .error
 {
 	color: #ff0000;
 }
 
-ul#console li.warn
+.console .warn
 {
 	color: #db931d;
 }
 
-ul#console li.debug,
-ul#console li.log,
-ul#console li.info
+.console .debug,
+.console .log,
+.console .info
 {
 	color: #0000ff;
 }

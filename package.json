@@ -14,6 +14,7 @@
   "homepage": "https://github.com/konfirm/konflux",
   "devDependencies": {
     "gulp-csslint": "^0.1.5",
-    "gulp-jshint": "^1.8.5"
+    "gulp-jshint": "^1.8.5",
+    "gulp-fiddlify": "pauldenotter/gulp-fiddlify"
   }
 }

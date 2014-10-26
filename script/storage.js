@@ -2,7 +2,8 @@
 	function Storage()
 	{
 		var storage = this,
-			adapters = {};
+			adapters = {},
+			cname = null;
 
 		function encode(data)
 		{
@@ -20,20 +21,37 @@
 				throw new Error('Storage is not supported in this browser');
 		}
 
+		function getCname()
+		{
+			if (cname !== null) return cname;
+
+			cname = false;
+
+			kx.ajax.get({
+				url: '/CNAME',
+				async: false,
+				success: function(status, data) {
+					cname = data;
+				}
+			});
+
+			return cname;
+		}
+
 		storage.load = function(args) {
 			var components = args.name.split('/'),
 				val, a;
 
-			if (components.length === 2 && 'function' === typeof adapters[components[0]])
+			if (components.length === 2 && 'function' === typeof adapters[components[0]].load)
 			{
-				if ((val = adapters[components[0]].apply(null, components.slice(1))))
+				if ((val = adapters[components[0]].load.apply(null, components.slice(1))))
 					return decode(val);
 			}
 			else
 			{
 				for (a in adapters._ordered)
 				{
-					if ((val = adapters._ordered[a].apply(null, components)))
+					if ((val = adapters._ordered[a].load.apply(null, components)))
 						return decode(val);
 				}
 			}
@@ -42,34 +60,95 @@
 		};
 
 		storage.save = function(args) {
-			adapters.user(args.name, args.data);
+			adapters.user.save(args.name, encode(args.data));
 		};
 
-		adapters.example = function(name)
-		{
-			return false;
+		storage.list = function(args) {
+			var list = {};
+
+			if ('function' !== typeof args.callback) return;
+
+			adapters.user.index(function(data) {
+				list.stored = data;
+				adapters.example.index(function(data) {
+					list.examples = data;
+					args.callback.call(null, list);
+				});
+			});
 		};
 
-		adapters.querystring = function(data)
-		{
-			var querystring;
+		adapters.example = {
+			load: function(name) {
+				var contents = false;
+				kx.ajax.get({
+					url: adapters.example._getUrl('/' + name),
+					success: function(status, data) {
+						contents = data.content;
+					},
+					async: false
+				});
+				return contents;
+			},
+			index: function(callback) {
+				kx.ajax.get({
+					url: adapters.example._getUrl(),
+					success: function(status, data) {
+						data = kx.iterator(data).map(function(example) {
+							return example.name;
+						}).collection();
+						data._prefix = 'example/';
+						callback.call(null, data);
+					},
+					error: function() {
+						callback.call(null, {_prefix: 'example/'});
+					}
+				});
+			},
+			_getUrl: function(path) {
+				var host = window.location.host,
+					base = 'https://api.github.com/repos/{user}/konflux/contents/examples/build{path}?ref=gh-pages',
+					user = 'konfirm',
+					match;
 
-			if (data)
-				return encode(data);
+				path = path || '';
 
-			querystring = window.location.search.replace(/(^\?|\/$)/g, '');
+				if (host !== getCname())
+				{
+					match = host.match(/(.*?)\.github\.io/);
+					if (match) user = match[1] || user;
+				}
 
-			if (querystring !== '') return decode(querystring);
-
-			return false;
+				return base.replace('{user}', user).replace('{path}', path);
+			}
 		};
 
-		adapters.user = function(name, data)
-		{
-			if (data)
-				return kx.storage.set(name, encode(data));
+		adapters.querystring = {
+			load: function(data) {
+				var querystring;
 
-			return kx.storage.get(name);
+				querystring = window.location.search.replace(/(^\?|\/$)/g, '');
+
+				if (querystring !== '') return querystring;
+
+				return false;
+			},
+			save: function (name, data) {
+				return data;
+			}
+		};
+
+		adapters.user = {
+			load: function(name) {
+				return kx.storage.get(name);
+			},
+			save: function(name, data) {
+				return kx.storage.set(name, data);
+			},
+			index: function(callback) {
+				var data = Object.keys(kx.storage.get());
+				data._prefix = 'user/';
+				callback.call(null, data);
+			}
 		};
 
 		adapters._ordered = [
@@ -78,7 +157,7 @@
 		];
 
 		(function init() {
-			var val = adapters.querystring();
+			var val = adapters.querystring.load();
 			if (val) kx.fiddle.display(val);
 		})();
 	}

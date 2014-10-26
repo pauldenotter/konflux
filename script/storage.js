@@ -100,7 +100,9 @@
 						callback.call(null, data);
 					},
 					error: function() {
-						callback.call(null, {_prefix: 'example/'});
+						data = [];
+						data._prefix = 'example/';
+						callback.call(null, data);
 					}
 				});
 			},

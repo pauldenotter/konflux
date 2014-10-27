@@ -6,27 +6,27 @@
 		var drawer = this,
 			drawers;
 
-		drawer.show = function(name) {
-			if (!(name in drawers))
+		drawer.show = function(args) {
+			if (!(args.name in drawers))
 				throw new Error('Drawer does not exist');
 
-			if ('function' === typeof drawers[name].beforeshow)
+			if ('function' === typeof drawers[args.name].beforeshow)
 			{
-				drawers[name].beforeshow.call(drawer, function() {
-					kx.style.addClass(drawers[name].el, 'active');
+				drawers[args.name].beforeshow.call(drawer, function() {
+					kx.style.addClass(drawers[args.name].el, 'active');
 				});
 			}
 			else
 			{
-				kx.style.addClass(drawers[name].el, 'active');
+				kx.style.addClass(drawers[args.name].el, 'active');
 			}
 		};
 
-		drawer.hide = function(name) {
-			if (!(name in drawers))
+		drawer.hide = function(args) {
+			if (!(args.name in drawers))
 				throw new Error('Drawer does not exist');
 
-			kx.style.removeClass(drawers[name].el, 'active');
+			kx.style.removeClass(drawers[args.name].el, 'active');
 		};
 
 		(function init() {

@@ -83,7 +83,7 @@
 				kx.ajax.get({
 					url: adapters.example._getUrl('/' + name),
 					success: function(status, data) {
-						contents = data.content;
+						contents = atob(data.content);
 					},
 					async: false
 				});

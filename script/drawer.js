@@ -7,7 +7,7 @@
 			drawers;
 
 		drawer.show = function(name) {
-			if (!name in drawers)
+			if (!(name in drawers))
 				throw new Error('Drawer does not exist');
 
 			if ('function' === typeof drawers[name].beforeshow)
@@ -23,7 +23,7 @@
 		};
 
 		drawer.hide = function(name) {
-			if (!name in drawers)
+			if (!(name in drawers))
 				throw new Error('Drawer does not exist');
 
 			kx.style.removeClass(drawers[name].el, 'active');

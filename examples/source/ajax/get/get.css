@@ -1,0 +1,17 @@
+ul {
+	list-style: none;
+	padding: 0;
+}
+
+a {
+    color: #000;
+    transition: color .2s;
+}
+
+a:visited {
+    color: #ccc;
+}
+
+a:hover {
+    color: #999;
+}

@@ -243,3 +243,43 @@ div[data-type]:before
 {
 	height: 300px;
 }
+
+.drawer.console.peak
+{
+	animation-duration: .2s;
+	animation-name: console-peak;
+	-webkit-animation-duration: .2s;
+	-webkit-animation-name: console-peak;
+}
+
+@-webkit-keyframes console-peak
+{
+	0% {
+		height: 0px;
+		opacity: 0;
+	}
+	50% {
+		height: 20px;
+		opacity: .5;
+	}
+	100% {
+		height: 0px;
+		opacity: 1;
+	}
+}
+
+@keyframes console-peak
+{
+	0% {
+		height: 0px;
+		opacity: 0;
+	}
+	50% {
+		height: 20px;
+		opacity: .5;
+	}
+	100% {
+		height: 0px;
+		opacity: 1;
+	}
+}

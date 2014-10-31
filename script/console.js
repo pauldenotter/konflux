@@ -49,6 +49,8 @@
 			msgEl.setAttribute('data-date', (new Date()).toString().replace(/([0-2][0-9]\:[0-5][0-9]\:[0-5][0-9]).*/, '$1'));
 			msgEl.appendChild(msgPre);
 			outputEl.appendChild(msgEl);
+			if (type === 'error' || type === 'warn')
+				kx.fiddle.drawer.peak({name: 'console'});
 		}
 
 		function formatError(error)

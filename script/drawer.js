@@ -9,6 +9,7 @@
 		drawer.show = function(args) {
 			var _drawer = getDrawer(args.name);
 
+			_drawer.visible = true;
 			if ('function' === typeof _drawer.beforeshow)
 			{
 				_drawer.beforeshow.call(drawer, function() {
@@ -19,13 +20,29 @@
 			{
 				kx.style.addClass(_drawer.el, 'active');
 			}
-			_drawer.visible = true;
 		};
 
 		drawer.hide = function(args) {
 			var _drawer = getDrawer(args.name);
 			kx.style.removeClass(_drawer.el, 'active');
 			_drawer.visible = false;
+		};
+
+		drawer.peak = function(args) {
+			var _drawer = getDrawer(args.name),
+				_animationEnd;
+			if (_drawer.visible || Array.prototype.slice.call(_drawer.el.classList).indexOf('peak') >= 0)
+				return;
+
+			_animationEnd = function() {
+				kx.event.remove(_drawer.el, 'animationend', _animationEnd);
+				setTimeout(function() {
+					kx.style.removeClass(_drawer.el, 'peak');
+				}, 2000);
+			};
+
+			kx.event.add(_drawer.el, 'animationend', _animationEnd)
+			kx.style.addClass(_drawer.el, 'peak');
 		};
 
 		drawer.toggle = function(args) {

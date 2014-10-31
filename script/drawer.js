@@ -41,7 +41,7 @@
 				}, 2000);
 			};
 
-			kx.event.add(_drawer.el, 'animationend', _animationEnd)
+			kx.event.add(_drawer.el, 'animationend', _animationEnd);
 			kx.style.addClass(_drawer.el, 'peak');
 		};
 
@@ -54,6 +54,7 @@
 		};
 
 		drawer.hideAll = function() {
+			var name;
 			for (name in drawers) {
 				drawer.hide({name: name});
 			}

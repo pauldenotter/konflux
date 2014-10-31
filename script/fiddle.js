@@ -59,6 +59,8 @@
 
 			for (type in data)
 				editors[type].setValue(data[type], 1);
+
+			changed = false;
 		};
 
 		fiddle.load = function(args) {

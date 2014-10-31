@@ -7,45 +7,33 @@
 			drawers;
 
 		drawer.show = function(args) {
-			if (!(args.name in drawers))
-				throw new Error('Drawer does not exist');
+			var _drawer = getDrawer(args.name);
 
-			if ('function' === typeof drawers[args.name].beforeshow)
+			if ('function' === typeof _drawer.beforeshow)
 			{
-				drawers[args.name].beforeshow.call(drawer, function() {
-					kx.style.addClass(drawers[args.name].el, 'active');
+				_drawer.beforeshow.call(drawer, function() {
+					kx.style.addClass(_drawer.el, 'active');
 				});
 			}
 			else
 			{
-				kx.style.addClass(drawers[args.name].el, 'active');
+				kx.style.addClass(_drawer.el, 'active');
 			}
-			drawers[args.name].visible = true;
+			_drawer.visible = true;
 		};
 
 		drawer.hide = function(args) {
-			if (!(args.name in drawers))
-				throw new Error('Drawer does not exist');
-
-			kx.style.removeClass(drawers[args.name].el, 'active');
-			drawers[args.name].visible = false;
+			var _drawer = getDrawer(args.name);
+			kx.style.removeClass(_drawer.el, 'active');
+			_drawer.visible = false;
 		};
 
 		drawer.toggle = function(args) {
-			if (!(args.name in drawers))
-				throw new Error('Drawer does not exist');
-
-			if (drawer.isVisible(args))
-				drawer.hide(args);
-			else
-				drawer.show(args);
+			drawer[(getDrawer(args.name).visible ? 'hide' : 'show')](args);
 		};
 
 		drawer.isVisible = function(args) {
-			if (!(args.name in drawers))
-				throw new Error('Drawer does not exist');
-
-			return drawers[args.name].visible;
+			return getDrawer(args.name).visible;
 		};
 
 		drawer.hideAll = function() {
@@ -53,6 +41,14 @@
 				drawer.hide({name: name});
 			}
 		};
+
+		function getDrawer(name)
+		{
+			if (!(name in drawers))
+				throw new Error('Drawer does not exist');
+
+			return drawers[name];
+		}
 
 		(function init() {
 			drawers = {

@@ -63,6 +63,7 @@
 
 		fiddle.load = function(args) {
 			fiddle.display(fiddle.storage.load(args));
+			fiddle.drawer.hideAll();
 		};
 
 		fiddle.save = function(args) {

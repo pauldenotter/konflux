@@ -20,6 +20,7 @@
 			{
 				kx.style.addClass(drawers[args.name].el, 'active');
 			}
+			drawers[args.name].visible = true;
 		};
 
 		drawer.hide = function(args) {
@@ -27,12 +28,37 @@
 				throw new Error('Drawer does not exist');
 
 			kx.style.removeClass(drawers[args.name].el, 'active');
+			drawers[args.name].visible = false;
+		};
+
+		drawer.toggle = function(args) {
+			if (!(args.name in drawers))
+				throw new Error('Drawer does not exist');
+
+			if (drawer.isVisible(args))
+				drawer.hide(args);
+			else
+				drawer.show(args);
+		};
+
+		drawer.isVisible = function(args) {
+			if (!(args.name in drawers))
+				throw new Error('Drawer does not exist');
+
+			return drawers[args.name].visible;
+		};
+
+		drawer.hideAll = function() {
+			for (name in drawers) {
+				drawer.hide({name: name});
+			}
 		};
 
 		(function init() {
 			drawers = {
 				list: {
 					el: document.getElementById('drawerList'),
+					visible: false,
 					beforeshow: function(callback) {
 						kx.fiddle.storage.list({callback: function(data) {
 
@@ -42,7 +68,7 @@
 							kx.iterator(data).each(function(list) {
 								var type = document.createElement('li'),
 									listEl = document.createElement('ul');
-								type.appendChild(document.createTextNode(list._prefix));
+								type.appendChild(document.createTextNode(list._prefix.slice(0, -1)));
 								type.appendChild(listEl);
 
 								kx.iterator(list).each(function(item) {

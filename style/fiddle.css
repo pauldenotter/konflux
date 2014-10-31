@@ -15,11 +15,6 @@ body
 	height: 100%;
 }
 
-.drawer
-{
-	display: none;
-}
-
 .grid
 {
 	display: flex;
@@ -184,4 +179,45 @@ div[data-type]:before
 	width: 5px;
 	top: 0;
 	bottom: 0;
+}
+
+.drawer
+{
+	transition: all .3s;
+}
+
+.drawer.list
+{
+	z-index: 20;
+	position: fixed;
+	top: 40px;
+	bottom: 0;
+	left: -312px;
+	width: 300px;
+	background: #8F908A;
+	margin: 0;
+	padding: 6px;
+	cursor: default;
+}
+
+.drawer.list.active
+{
+	left: 0;
+}
+
+.drawer.list ul
+{
+	margin: 0;
+	padding-left: 12px;
+	list-style: none;
+}
+
+.drawer.list ul li
+{
+	cursor: pointer;
+}
+.drawer.list ul li:hover
+{
+	color: #8F908A;
+	background: #2F3129;
 }

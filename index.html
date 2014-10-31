@@ -11,9 +11,10 @@
 			<header class="controls row">
 				<h1>kxFiddle</h1>
 				<div class="buttons">
-					<button data-action="kx.fiddle.run">Run</button>
+					<button data-action="kx.fiddle.drawer.toggle" data-name="console">Console</button>
 					<button data-action="kx.fiddle.save">Save</button>
 					<button data-action="kx.fiddle.drawer.toggle" data-name="list">Open</button>
+					<button data-action="kx.fiddle.run">Run</button>
 				</div>
 			</header>
 
@@ -26,11 +27,11 @@
 				<div class="row">
 					<div id="sandbox" class="sandbox"></div>
 				</div>
+				<ul id="console" class="row drawer console"></ul>
 			</div>
 		</section>
 
 		<ul id="drawerList" class="drawer list"></ul>
-		<ul id="console" class="drawer console"></ul>
 
 		<script src="vendor/konfirm/konflux/konflux.js"></script>
 		<script src="vendor/ajaxorg/ace/ace.js"></script>

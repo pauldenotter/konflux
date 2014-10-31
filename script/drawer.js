@@ -85,6 +85,10 @@
 							callback();
 						}});
 					}
+				},
+				console: {
+					el: document.getElementById('console'),
+					visible: false
 				}
 			};
 		})();

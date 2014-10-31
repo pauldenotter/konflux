@@ -5,6 +5,7 @@
 	{
 		var fiddle = this,
 			editors = {},
+			changed = false,
 			_console = document.getElementById('console'),
 			_instructions = {
 				javascript: {
@@ -76,6 +77,8 @@
 				name: name,
 				data: data
 			});
+
+			changed = false;
 		};
 
 		fiddle.clear = function(args) {
@@ -121,6 +124,9 @@
 		(function init() {
 			kx.iterator(['html', 'css', 'javascript']).each(function(mode) {
 				var editor = ace.edit('ace-' + mode);
+				editor.on('change', function() {
+					changed = true;
+				});
 				editor.setTheme('ace/theme/monokai');
 				editor.getSession().setMode('ace/mode/' + mode);
 				editor.setOptions({
@@ -128,6 +134,9 @@
 				});
 				editors[mode] = editor;
 			});
+			window.onbeforeunload = function() {
+				return changed ? 'Are you sure you want to navigate away from this page?' : null;
+			};
 		})();
 	}
 

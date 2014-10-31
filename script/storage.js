@@ -147,7 +147,9 @@
 				return kx.storage.set(name, data);
 			},
 			index: function(callback) {
-				var data = Object.keys(kx.storage.get());
+				var data = kx.iterator(Object.keys(kx.storage.get())).filter(function(value) {
+					return value.substr(0, 1) !== '_';
+				}).collection();
 				data._prefix = 'user/';
 				callback.call(null, data);
 			}

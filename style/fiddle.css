@@ -198,6 +198,7 @@ div[data-type]:before
 	margin: 0;
 	padding: 6px;
 	cursor: default;
+	box-shadow: 0 0 5px #000;
 }
 
 .drawer.list.active

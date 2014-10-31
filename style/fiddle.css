@@ -1,26 +1,93 @@
+html, body
+{
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
 body
 {
-	font-family: sans-serif;
+	font-family: 'Alegreya Sans SC', sans-serif;
 }
 
-.dp50
+#main
 {
-	width: 50%;
-	float: left;
-	display: inline;
-	*margin-right: -1px;
-}
-
-.ace_editor,
-.sandbox
-{
-	height: 160px;
-}
-
-.sandbox > iframe
-{
-	width: 100%;
 	height: 100%;
+}
+
+.drawer
+{
+	display: none;
+}
+
+.grid
+{
+	display: flex;
+	flex-direction: column;
+}
+
+.grid > .grid
+{
+	flex: 1;
+}
+
+.grid > .row
+{
+	flex: 1;
+	display: flex;
+	flex-direction: row;
+}
+
+.grid > .controls
+{
+	background: #2F3129;
+	color: #8F908A;
+	min-height: 40px;
+	flex: 0;
+	justify-content: space-between;
+}
+
+.controls h1
+{
+	margin: 6px;
+	cursor: default;
+}
+
+.controls button
+{
+	font-family: 'Alegreya Sans SC', sans-serif;
+	text-transform: uppercase;
+	margin: 4px 4px 4px 0;
+	border: 1px solid #8F908A;
+	background: #2F3129;
+	color: #8F908A;
+	font-size: 16px;
+	line-height: 1;
+	padding: 8px 14px 6px 14px;
+	cursor: pointer;
+	transition: all .3s;
+	outline: 0;
+}
+
+.controls button:hover
+{
+	background: #3D4033;
+}
+
+.row > .ace_editor
+{
+	flex: .33;
+}
+
+.row > .sandbox
+{
+	flex: 1;
+	display: flex;
+}
+
+iframe
+{
+	flex: 1;
 	border: none;
 }
 
@@ -37,6 +104,7 @@ div[data-type]:before
 	top: 5px;
 	right: 5px;
 	z-index: 10;
+	opacity: .5;
 }
 
 .console
@@ -97,4 +165,23 @@ div[data-type]:before
 .console .info
 {
 	color: #0000ff;
+}
+
+.splitter
+{
+	background: #ccc;
+}
+
+.splitter.horizontal
+{
+	height: 5px;
+	left: 0;
+	right: 0;
+}
+
+.splitter.vertical
+{
+	width: 5px;
+	top: 0;
+	bottom: 0;
 }

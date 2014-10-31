@@ -3,37 +3,34 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>kxFiddle</title>
+		<link href='http://fonts.googleapis.com/css?family=Alegreya+Sans+SC:100' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="style/fiddle.css" />
 	</head>
 	<body>
-		<header>
-			<h1>kxFiddle</h1>
-		</header>
+		<section id="main" class="grid">
+			<header class="controls row">
+				<h1>kxFiddle</h1>
+				<div class="buttons">
+					<button data-action="kx.fiddle.run">Run</button>
+					<button data-action="kx.fiddle.save">Save</button>
+					<button data-action="kx.fiddle.drawer.show" data-name="list">Open</button>
+				</div>
+			</header>
+
+			<div class="grid">
+				<div class="row">
+					<div id="ace-html" data-type="HTML"></div>
+					<div id="ace-javascript" data-type="JavaScript"></div>
+					<div id="ace-css" data-type="CSS"></div>
+				</div>
+				<div class="row">
+					<div id="sandbox" class="sandbox"></div>
+				</div>
+			</div>
+		</section>
 
 		<ul id="drawerList" class="drawer list"></ul>
-
-		<div class="row">
-			<div class="dp50">
-				<div id="ace-html" data-type="HTML"></div>
-				<hr />
-				<div id="ace-javascript" data-type="JavaScript"></div>
-			</div>
-			<div class="dp50">
-				<div id="ace-css" data-type="CSS"></div>
-				<hr />
-				<div id="sandbox" class="sandbox"></div>
-			</div>
-		</div>
-		<div class="row">
-			<span class="controls">
-				<button data-action="kx.fiddle.run">Run</button>
-				<button data-action="kx.fiddle.save">Save</button>
-				<button data-action="kx.fiddle.drawer.show" data-name="list">List</button>
-			</span>
-		</div>
-		<div class="row">
-			<ul id="console" class="console"></ul>
-		</div>
+		<ul id="console" class="drawer console"></ul>
 
 		<script src="vendor/konfirm/konflux/konflux.js"></script>
 		<script src="vendor/ajaxorg/ace/ace.js"></script>
